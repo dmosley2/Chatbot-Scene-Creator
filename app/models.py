@@ -7,6 +7,7 @@ class Character:
     system_prompt: str
     model: str
     portrait: str
+    summary: str
 
 @dataclass
 class Turn:
