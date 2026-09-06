@@ -1,6 +1,6 @@
-from models import Character, Turn
-from personas import list_available_characters, load_character
-from ollama_client import chat
+from .models import Character, Turn
+from .personas import list_available_characters, load_character
+from .ollama_client import chat
 import random
 
 def build_messages(character: Character, turns: list[Turn], scene_intro: str, total_turns: int, current_turn: int) -> list[dict]:

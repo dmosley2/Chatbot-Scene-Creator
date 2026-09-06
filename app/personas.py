@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from models import Character
+from .models import Character
 
 def load_character(name: str) -> Character:
     filepath = load_persona_dir() / f"{name}.json"

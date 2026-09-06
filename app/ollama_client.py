@@ -13,3 +13,7 @@ async def chat(model: str, messages: list[dict]) -> str:
         )
         data = response.json()
         return data["message"]["content"]
+
+async def warmup(model: str) -> None:
+    await chat(model, [{"role": "user", "message": "hi"}])
+        
