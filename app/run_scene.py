@@ -4,7 +4,7 @@ from .scene import build_messages, pick_character_count, pick_random_characters,
 from .ollama_client import chat, warmup
 from .personas import load_character, get_portrait_path, list_available_characters
 
-async def run_scene():
+async def run_scene(send_turn):
     total_turns = 10
     count = pick_character_count()
     characters = pick_random_characters(count)
@@ -18,16 +18,20 @@ async def run_scene():
 
     scene_intro = await generate_scene_premise(characters)
     turns: list[Turn] = []
+    await send_turn({"type": "premise", "content": scene_intro})
     messages_export = []
 
-    # print(scene_intro)
+    print(scene_intro)
 
     for i in range(total_turns):
+        print(f"starting turn {i}")
         speaker = await pick_next_speaker(characters, turns, total_turns, i+1)
         messages = build_messages(speaker, turns, scene_intro, total_turns, i+1)
         reply = await chat(speaker.model, messages)
         # print(f"{speaker.name}: {reply}")
-        messages_export.append({"name": speaker.name, "content": reply, "portrait": speaker.portrait})
+        turn_data = {"type": "turn", "name": speaker.name, "content": reply, "portrait": speaker.portrait}
+        await send_turn(turn_data)
+        messages_export.append(turn_data)
         turns.append(Turn(speaker.id, reply))
 
     return {"premise": scene_intro, "turns": messages_export}
